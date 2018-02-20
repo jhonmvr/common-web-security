@@ -39,44 +39,51 @@ public class JWTCustomFilter implements ContainerRequestFilter {
 
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		try {
-			log.info("#### ingres a filtro JWTCustomFilter: ");
+			log.debug("#### ingres a filtro JWTCustomFilter: ");
 			String temporalToken= (String)servletRequest.getSession().getAttribute(Constantes.TEMPORAL_TOKEN_SESSION_ATTRIB);
 			// Get the HTTP Authorization header from the request
 			String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-			log.info("#### authorizationHeader : " + authorizationHeader);
+			log.debug("#### authorizationHeader : " + authorizationHeader);
 			if (authorizationHeader != null && authorizationHeader.startsWith(Constantes.KEYHEADER_FIRST_LOGIN_JWT)) {
-				log.info("#### authorizationHeader firstlogin : ");
+				log.debug("#### authorizationHeader firstlogin : ");
 				String firstLoginKey = authorizationHeader.substring(Constantes.KEYHEADER_FIRST_LOGIN_JWT.length())
 						.trim();
-				log.info("#### authorizationHeader firstlogin key : " + firstLoginKey);
-				log.info("#### authorizationHeader firstlogin temporal token : " + temporalToken);
-				//if (!firstLoginKey.trim().equalsIgnoreCase(Constantes.SECURITY_KEY_FIRST_LOGIN)) {
+				log.debug("#### authorizationHeader firstlogin key : " + firstLoginKey);
+				log.debug("#### authorizationHeader firstlogin temporal token : " + temporalToken);
 				if (!firstLoginKey.trim().equalsIgnoreCase(temporalToken)) {
-					log.info("#### ERROR en first login");
+					log.debug("#### ERROR en first login");
 					throw new NotAuthorizedException("Authorization header must be provided");
 				}
 				return;
 			}
 			// Check if the HTTP Authorization header is present and formatted correctly
 			if (authorizationHeader == null || !authorizationHeader.startsWith(Constantes.KEYHEADER_JWT)) {
-				log.info("#### invalid authorizationHeader : " + authorizationHeader);
+				log.debug("#### invalid authorizationHeader : " + authorizationHeader);
 				throw new NotAuthorizedException("Authorization header must be provided");
 			}
 			// Extract the token from the HTTP Authorization header
 			String token = authorizationHeader.substring(Constantes.KEYHEADER_JWT.length()).trim();
-			log.info("#### TOKEN EXTRAIDO : " + token);
-			Usuario user = JwtUtil.parseJWTComplex(token);
+			log.debug("#### TOKEN EXTRAIDO : " + token);
+			Usuario user = JwtUtil.parseJWTComplex( token );
 			// Validate the token
-			log.info("#### usairio es id : " + user.getId());
-			log.info("#### usairio es nombre : " + user.getNombre());
+			if(user.getId().equalsIgnoreCase( String.valueOf(
+					servletRequest.getSession().getAttribute( Constantes.USER_SESSION_ATTRIB )))) {
+				throw new SegSucreException( Constantes.ERROR_CODE_CUSTOM, "ERROR EN LOGIN, EL USUARIO ENVIADO EN EL TOKEN NO CORRESPONDE AL USUARIO EN SESSION" );
+			}
+			log.debug( "==========>>>comparo usuario token: " + user.getId() + " contra usuario en session " +
+					servletRequest.getSession().getAttribute( Constantes.USER_SESSION_ATTRIB ) );
+			log.debug("#### usairio es id : " + user.getId());
+			log.debug("#### usairio es nombre : " + user.getNombre());
 		} catch (SegSucreException e) {
-			log.info("#### RelativeException invalid token : " + e.getMessage());
+			log.debug("#### RelativeException invalid token : " + e.getMessage());
 			requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
 		} catch (Exception e) {
-			log.info("#### Exception invalid token : " + e.getMessage());
+			log.debug("#### Exception invalid token : " + e.getMessage());
 			requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
 		}
 
 	}
+	
+	
 
 }
