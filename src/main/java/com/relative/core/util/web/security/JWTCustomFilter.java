@@ -40,38 +40,41 @@ public class JWTCustomFilter implements ContainerRequestFilter {
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		try {
 			log.debug("#### ingres a filtro JWTCustomFilter: ");
-			String temporalToken= (String)servletRequest.getSession().getAttribute(Constantes.TEMPORAL_TOKEN_SESSION_ATTRIB);
+			log.debug("####============> SESSION ID: " + servletRequest.getSession().getId());
+			
 			// Get the HTTP Authorization header from the request
 			String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 			log.debug("#### authorizationHeader : " + authorizationHeader);
 			if (authorizationHeader != null && authorizationHeader.startsWith(Constantes.KEYHEADER_FIRST_LOGIN_JWT)) {
 				log.debug("#### authorizationHeader firstlogin : ");
-				String firstLoginKey = authorizationHeader.substring(Constantes.KEYHEADER_FIRST_LOGIN_JWT.length())
-						.trim();
+				String temporalToken= (String)servletRequest.getSession().getAttribute(Constantes.TEMPORAL_TOKEN_SESSION_ATTRIB);
+				String firstLoginKey = authorizationHeader.substring(Constantes.KEYHEADER_FIRST_LOGIN_JWT.length()).trim();
 				log.debug("#### authorizationHeader firstlogin key : " + firstLoginKey);
 				log.debug("#### authorizationHeader firstlogin temporal token : " + temporalToken);
 				if (!firstLoginKey.trim().equalsIgnoreCase(temporalToken)) {
 					log.debug("#### ERROR en first login");
-					throw new NotAuthorizedException("Authorization header must be provided");
+					throw new NotAuthorizedException("CABECERA DE AUTORIZACION DEBE SER PROVISTA PARA PRIMER LOGIN, GENERE TOKEN TEMPORAL");
 				}
+					
 				return;
 			}
 			// Check if the HTTP Authorization header is present and formatted correctly
 			if (authorizationHeader == null || !authorizationHeader.startsWith(Constantes.KEYHEADER_JWT)) {
 				log.debug("#### invalid authorizationHeader : " + authorizationHeader);
-				throw new NotAuthorizedException("Authorization header must be provided");
+				throw new NotAuthorizedException("CABECERA DE AUTORIZACION DEBE SER PROVISTA PARA VALIDACION DE TOKEN");
 			}
 			// Extract the token from the HTTP Authorization header
 			String token = authorizationHeader.substring(Constantes.KEYHEADER_JWT.length()).trim();
 			log.debug("#### TOKEN EXTRAIDO : " + token);
 			Usuario user = JwtUtil.parseJWTComplex( token );
-			// Validate the token
-			if(user.getId().equalsIgnoreCase( String.valueOf(
-					servletRequest.getSession().getAttribute( Constantes.USER_SESSION_ATTRIB )))) {
-				throw new SegSucreException( Constantes.ERROR_CODE_CUSTOM, "ERROR EN LOGIN, EL USUARIO ENVIADO EN EL TOKEN NO CORRESPONDE AL USUARIO EN SESSION" );
-			}
 			log.debug( "==========>>>comparo usuario token: " + user.getId() + " contra usuario en session " +
 					servletRequest.getSession().getAttribute( Constantes.USER_SESSION_ATTRIB ) );
+			// Validate the token
+			/*if(!user.getId().equalsIgnoreCase( String.valueOf(
+					servletRequest.getSession().getAttribute( Constantes.USER_SESSION_ATTRIB )))) {
+				throw new SegSucreException( Constantes.ERROR_CODE_CUSTOM, "ERROR EN LOGIN, EL USUARIO ENVIADO EN EL TOKEN NO CORRESPONDE AL USUARIO EN SESSION" );
+			}*/
+			
 			log.debug("#### usairio es id : " + user.getId());
 			log.debug("#### usairio es nombre : " + user.getNombre());
 		} catch (SegSucreException e) {
