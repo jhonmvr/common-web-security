@@ -16,10 +16,10 @@ import javax.ws.rs.ext.Provider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import ec.fin.segurossucre.core.exception.SegSucreException;
-import ec.fin.segurossucre.core.util.main.Constantes;
-import ec.fin.segurossucre.core.util.main.Usuario;
-
+import com.relative.core.exception.RelativeException;
+import com.relative.core.util.main.Constantes;
+import com.relative.core.util.main.Usuario;
+import com.relative.core.util.web.security.JWTTokenValidation;
 /**
  * Filtro para solicitudes enviadas a travez de Restful, que requiere
  * autenticacion y validacion Implementa la la inferace Qualifier
@@ -72,12 +72,12 @@ public class JWTCustomFilter implements ContainerRequestFilter {
 			// Validate the token
 			/*if(!user.getId().equalsIgnoreCase( String.valueOf(
 					servletRequest.getSession().getAttribute( Constantes.USER_SESSION_ATTRIB )))) {
-				throw new SegSucreException( Constantes.ERROR_CODE_CUSTOM, "ERROR EN LOGIN, EL USUARIO ENVIADO EN EL TOKEN NO CORRESPONDE AL USUARIO EN SESSION" );
+				throw new RelativeException( Constantes.ERROR_CODE_CUSTOM, "ERROR EN LOGIN, EL USUARIO ENVIADO EN EL TOKEN NO CORRESPONDE AL USUARIO EN SESSION" );
 			}*/
 			
 			log.debug("#### usairio es id : " + user.getId());
 			log.debug("#### usairio es nombre : " + user.getNombre());
-		} catch (SegSucreException e) {
+		} catch (RelativeException e) {
 			log.debug("#### RelativeException invalid token : " + e.getMessage());
 			requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
 		} catch (Exception e) {

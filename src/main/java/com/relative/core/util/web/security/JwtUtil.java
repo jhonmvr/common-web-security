@@ -6,10 +6,11 @@ import java.util.Date;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
-import ec.fin.segurossucre.core.exception.SegSucreException;
-import ec.fin.segurossucre.core.util.enums.LanguageEnum;
-import ec.fin.segurossucre.core.util.main.Constantes;
-import ec.fin.segurossucre.core.util.main.Usuario;
+import com.relative.core.exception.RelativeException;
+import com.relative.core.util.enums.LanguageEnum;
+import com.relative.core.util.main.Constantes;
+import com.relative.core.util.main.Usuario;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtBuilder;
@@ -36,7 +37,7 @@ public class JwtUtil {
            System.out.println("token: " + myToken);
            try {
 				parseJWTComplex("eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJsdWlzLnRhbWF5byIsImlhdCI6MTUxODEwMjg0NCwic3ViIjoibHVpcy50YW1heW8iLCJpc3MiOiJ3d3cucmVsYXRpdmUtZW5naW5lLmNvbSIsImV4cCI6MTUxODEwMjg0N30.i3gnloRj0UES-3mMvJt-RyXjzn4fmeZFOQ4RznzqjV8");
-			} catch (SegSucreException e) {
+			} catch (RelativeException e) {
 				e.printStackTrace();
 			}
 	}
@@ -141,22 +142,22 @@ public class JwtUtil {
 	     * EXPIRATION claims.getExpiration() <br>
 	     * @return  El objeto de usuario extraido de token especificado o null si un token no es valido.
 	     */
-	    public static Usuario parseJWTComplex(String jwt) throws SegSucreException{
+	    public static Usuario parseJWTComplex(String jwt) throws RelativeException{
 	        try {
 				Claims claims = Jwts.parser()         
 				   .setSigningKey(DatatypeConverter.parseBase64Binary(Constantes.CRYPTO_JWT))
 				   .parseClaimsJws(jwt).getBody();
 				return new Usuario(claims.getId(),claims.getId(),null,null,null,jwt,LanguageEnum.ES_EC,true,null);
 			} catch (ExpiredJwtException e) {
-				throw new SegSucreException(Constantes.ERROR_CODE_CUSTOM, "ERROR: ExpiredJwtException parseJWTComplex " + e.getMessage());
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR: ExpiredJwtException parseJWTComplex " + e.getMessage());
 			} catch (UnsupportedJwtException e) {
-				throw new SegSucreException(Constantes.ERROR_CODE_CUSTOM, "ERROR: UnsupportedJwtException parseJWTComplex " + e.getMessage());
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR: UnsupportedJwtException parseJWTComplex " + e.getMessage());
 			} catch (MalformedJwtException e) {
-				throw new SegSucreException(Constantes.ERROR_CODE_CUSTOM, "ERROR: MalformedJwtException parseJWTComplex " + e.getMessage());
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR: MalformedJwtException parseJWTComplex " + e.getMessage());
 			} catch (IllegalArgumentException e) {
-				throw new SegSucreException(Constantes.ERROR_CODE_CUSTOM, "ERROR: IllegalArgumentException parseJWTComplex " + e.getMessage());
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR: IllegalArgumentException parseJWTComplex " + e.getMessage());
 			}catch (Exception e) {
-				throw new SegSucreException(Constantes.ERROR_CODE_CUSTOM, "ERROR: Exception parseJWTComplex " + e.getMessage());
+				throw new RelativeException(Constantes.ERROR_CODE_CUSTOM, "ERROR: Exception parseJWTComplex " + e.getMessage());
 			}
 	        
 	    }
