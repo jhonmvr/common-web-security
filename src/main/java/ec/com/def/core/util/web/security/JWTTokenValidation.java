@@ -1,4 +1,4 @@
-package com.relative.core.util.web.security;
+package ec.com.def.core.util.web.security;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;

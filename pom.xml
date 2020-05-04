@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.relative</groupId>
+  <groupId>ec.com.def</groupId>
   <artifactId>common-web-security</artifactId>
-  <version>1.0</version>
+  <version>1.0.0</version>
   
   <dependencies>
   
@@ -26,9 +26,9 @@
 		
 		<!-- CUSTOM LIB -->
 		<dependency>
-			<groupId>com.relative</groupId>
+			<groupId>ec.com.def</groupId>
 			<artifactId>core-common-jee</artifactId>
-			<version>1.0</version>
+			<version>1.0.0</version>
 		</dependency>
 		<!-- END CUSTOM LIB -->
   </dependencies>
@@ -82,11 +82,11 @@
 	<distributionManagement>
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
-			<url>http://192.168.100.182:8880/nexus/content/repositories/MAVEN_RELATIVE_SNAPSHOT/</url>
+			<url>http://192.168.100.182:8880/nexus/content/repositories/MAVEN_SNAPSHOT/</url>
 		</snapshotRepository>
 		<repository>
 			<id>nexus-releases</id>
-			<url>http://192.168.100.182:8880/nexus/content/repositories/MAVEN_RELATIVE/</url>
+			<url>http://192.168.100.182:8880/nexus/content/repositories/MAVEN/</url>
 		</repository>
 	</distributionManagement>
 </project>

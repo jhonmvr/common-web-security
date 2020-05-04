@@ -1,4 +1,4 @@
-package com.relative.core.util.web.security;
+package ec.com.def.core.util.web.security;
 
 import java.io.IOException;
 
@@ -16,10 +16,9 @@ import javax.ws.rs.ext.Provider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.relative.core.exception.RelativeException;
-import com.relative.core.util.main.Constantes;
-import com.relative.core.util.main.Usuario;
-import com.relative.core.util.web.security.JWTTokenValidation;
+import ec.com.def.core.exception.DefException;
+import ec.com.def.core.util.main.Constantes;
+import ec.com.def.core.util.main.Usuario;
 /**
  * Filtro para solicitudes enviadas a travez de Restful, que requiere
  * autenticacion y validacion Implementa la la inferace Qualifier
@@ -77,7 +76,7 @@ public class JWTCustomFilter implements ContainerRequestFilter {
 			
 			log.debug("#### usairio es id : " + user.getId());
 			log.debug("#### usairio es nombre : " + user.getNombre());
-		} catch (RelativeException e) {
+		} catch (DefException e) {
 			log.debug("#### RelativeException invalid token : " + e.getMessage());
 			requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
 		} catch (Exception e) {

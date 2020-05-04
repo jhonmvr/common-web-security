@@ -1,4 +1,4 @@
-package com.relative.core.util.web.security;
+package ec.com.def.core.util.web.security;
 
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
